@@ -17,6 +17,9 @@ account = Account(
     tenant_id="d4295056-baca-4708-8c60-0351c0fb01db",
 )
 
+def Convert(lst):
+    res_dct = {lst[i]: lst[i + 1] for i in range(0, len(lst), 2)}
+    return res_dct
 
 if account.authenticate():
     driver = webdriver.Firefox(
@@ -146,6 +149,37 @@ if account.authenticate():
                 By.XPATH, "//span[contains(text(),'Close')]"
             ).click()
     time.sleep(5)
+    ###########thirdPolicy################
+    third_filepath="/home/abhishekraj/python/Python_Script/all_policy/Anti-malware.xlsx"
+
+    policy_third = driver.find_element(
+        By.XPATH, "//button[normalize-space()='Anti-malware']"
+        ).click()
+    time.sleep(5)
+    data_policy_third_number_policy = driver.find_elements(
+        By.CLASS_NAME, "ms-List-cell"
+        )
+    wb = Workbook()
+    for third_data in data_policy_third_number_policy:
+        print(third_data.text.splitlines())
+        ws1 = wb.create_sheet(third_data.text.splitlines()[1])
+        third_data.click()
+        time.sleep(5)
+        data_policy_third_number = driver.find_elements(
+            By.CLASS_NAME, "ms-MetaDataList"
+            )
+        for data in data_policy_third_number:
+            print("policy_name: ",data.text.splitlines())
+            print("key: ",data.text.splitlines()[0])
+            print("value: ",data.text.splitlines()[1])
+            sav_data = [data.text.splitlines()]
+            for row in sav_data:
+                ws1.append(row)
+            time.sleep(5)
+        close_btn = driver.find_element(
+            By.XPATH, "//span[contains(text(),'Close')]"
+        ).click()
+    wb.save(filename = third_filepath)
     
     secure_Score = driver.find_element(
         By.XPATH, "//a[@name='Secure score']"
